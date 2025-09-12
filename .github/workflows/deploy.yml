@@ -1,0 +1,149 @@
+name: Deploy Observa UI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:  # Allows manual triggering with environment selection
+
+permissions:
+  id-token: write  # Required for OIDC authentication
+  contents: write   # Required to check out code
+
+jobs:
+  lint:
+    name: Lint code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+  format:
+    name: Check format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check Prettier formatting
+        run: npm run check-format
+
+  validate-template:
+    name: Validate CloudFormation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install cfn-lint
+        run: pip install cfn-lint
+
+      - name: Validate CloudFormation template
+        run: cfn-lint template.yaml
+
+  build-and-deploy:
+    name: Build & Deploy
+    needs: [ validate-template ]
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: production  # Enables environment-specific secrets & approvals
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set Environment Suffix Using PR Number
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            PR_NUMBER=$(jq --raw-output .number "${GITHUB_EVENT_PATH}")
+            echo "EnvSuffix=pr-${PR_NUMBER}" >> $GITHUB_ENV
+          else
+            echo "EnvSuffix=" >> $GITHUB_ENV
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18 # Or your preferred Node.js version
+          cache: 'npm' # Caches npm dependencies for faster builds
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build SPA
+        run: npm run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}  # Use OIDC for secure authentication
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload to S3
+        run: |
+          if [ -z "${EnvSuffix}" ]; then
+            BUCKET="observa-ui"
+          else
+            BUCKET="observa-ui-${EnvSuffix}"
+          fi
+          aws s3 sync dist/ "s3://${BUCKET}/" --delete
+          echo "DEPLOYED_S3_BUCKET=${BUCKET}" >> $GITHUB_ENV      
+
+      - name: Deploy CloudFormation stack
+        run: |
+          STACK_NAME="observa-ui"
+          if [ ! -z "${{ env.EnvSuffix }}" ]; then
+            STACK_NAME="observa-ui-${{ env.EnvSuffix }}"
+          fi
+
+          aws cloudformation deploy \
+            --template-file template.yaml \
+            --stack-name ${STACK_NAME}  \
+            --parameter-overrides \
+              ArtifactBucket=${{ env.DEPLOYED_S3_BUCKET }} \
+              TimeZone=${{ secrets.TIME_ZONE || 'America/New_York' }} \
+              EnvSuffix=${{ env.EnvSuffix }} \
+            --capabilities CAPABILITY_IAM \
+            --no-fail-on-empty-changeset
+
+      - name: Get CloudFront Distribution ID
+        id: cfdist
+        run: |
+          DIST_ID=$(aws cloudformation describe-stacks \
+              --stack-name "observa-ui${{ env.EnvSuffix && format('-{0}', env.EnvSuffix) }}" \
+              --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDomainName'].OutputValue" \
+              --output text)
+          echo "DIST_ID=${DIST_ID}" >> $GITHUB_ENV
+
+      - name: Invalidate CloudFront
+        run: aws cloudfront create-invalidation --distribution-id ${{ env.DIST_ID }} --paths "/*"

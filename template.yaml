@@ -1,0 +1,126 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: SPA deployment for observa-ui using S3 + CloudFront (secure, modern, multi-env)
+
+Parameters:
+  EnvSuffix:
+    Type: String
+    Default: ""
+    Description: Suffix for per-PR stacks (e.g. pr-123). Leave empty for main/prod.
+  SSLCertificateArn:
+    Description: ACM Certificate ARN (must be in us-east-1) for custom domain
+    Type: String
+  MainDomain:
+    Description: Main custom domain for prod (e.g., observa-ui.ogm710811.com)
+    Type: String
+    Default: observa-ui.ogm710811.com
+  PreviewDomain:
+    Description: PR/preview custom domain pattern (e.g., observa-ui-preview.ogm710811.com)
+    Type: String
+    Default: observa-ui-preview.ogm710811.com
+
+Conditions:
+  IsMain: !Equals [ !Ref EnvSuffix, "" ]
+
+Mappings:
+  PriceClass:
+    default:
+      value: PriceClass_100
+
+Resources:
+  # S3 bucket for SPA, private (CloudFront only)
+  SpaS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !If
+        - IsMain
+        - observa-ui
+        - !Sub "observa-ui-${EnvSuffix}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+
+  # OAC: Origin Access Control for CloudFront -> S3 private bucket
+  SpaBucketOAC:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "oac-observaui-${EnvSuffix}"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+        Description: OAC for SPA S3 bucket CloudFront access
+
+  # Bucket policy: allow only CloudFront (via OAC) to GET (no public access)
+  SpaS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SpaS3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowGetFromCloudFrontOAC
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${SpaS3Bucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}"
+
+  # CloudFront Distribution
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Aliases:
+          - !If
+            - IsMain
+            - !Ref MainDomain
+            - !Sub "${PreviewDomain}"
+        DefaultRootObject: index.html
+        Origins:
+          - Id: S3Origin
+            DomainName: !GetAtt SpaS3Bucket.RegionalDomainName
+            S3OriginConfig: { }
+            OriginAccessControlId: !Ref SpaBucketOAC
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [ GET, HEAD, OPTIONS ]
+          CachedMethods: [ GET, HEAD ]
+          Compress: true
+          ForwardedValues:
+            QueryString: false
+            Cookies: { Forward: none }
+        CustomErrorResponses:
+          # SPA routing: always serve index.html on 403/404 for client-side routes
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+        ViewerCertificate:
+          AcmCertificateArn: !Ref SSLCertificateArn
+          SslSupportMethod: sni-only
+        PriceClass: !FindInMap [ PriceClass, default, value ]
+        HttpVersion: http2
+
+Outputs:
+  CloudFrontDomainName:
+    Description: CloudFront distribution domain (for DNS/CNAME setup)
+    Value: !GetAtt CloudFrontDistribution.DomainName
+  S3BucketName:
+    Value: !Ref SpaS3Bucket
+
+
+

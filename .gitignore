@@ -1,0 +1,53 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+.out/
+.vite/
+
+# Local env files
+.env
+.env.*.local
+!.env.example
+
+# Log files
+*.log
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# VSCode
+.vscode/
+
+# System
+.DS_Store
+Thumbs.db
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional: coverage/testing output
+coverage/
+*.lcov
+
+# Mac: resource fork files
+._*
+.Spotlight-V100
+.Trashes
+
+# Optional: misc
+*.swp
+*.swo
+
+# Parcel/Vite cache
+.cache/

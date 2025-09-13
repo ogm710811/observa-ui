@@ -297,7 +297,7 @@ export default function App() {
             <div className="flex items-center gap-2">
               <LayoutGrid className="h-6 w-6" />
               <h1 className="text-xl font-semibold tracking-tight md:text-2xl">
-                Tech Health – Capital One (Wireframe v1)
+                Tech Health – Observa UI
               </h1>
             </div>
             <div className="flex items-center gap-2 text-xs opacity-90">
@@ -312,7 +312,9 @@ export default function App() {
             <CardContent className="pt-6">
               <div className="grid grid-cols-1 items-center gap-3 md:grid-cols-12">
                 <div className="md:col-span-3">
-                  <Label className="mb-1 block">Environment</Label>
+                  <Label className="mb-1 block" htmlFor="env">
+                    Environment
+                  </Label>
                   <Select onValueChange={v => setEnv(v as Service['env'])}>
                     <SelectTrigger aria-label="Environment">
                       <SelectValue placeholder="All" />
@@ -326,7 +328,9 @@ export default function App() {
                   </Select>
                 </div>
                 <div className="md:col-span-3">
-                  <Label className="mb-1 block">Region</Label>
+                  <Label className="mb-1 block" htmlFor="region">
+                    Region
+                  </Label>
                   <Select onValueChange={v => setRegion(v as Service['region'])}>
                     <SelectTrigger aria-label="Region">
                       <SelectValue placeholder="All" />
@@ -340,7 +344,9 @@ export default function App() {
                   </Select>
                 </div>
                 <div className="md:col-span-3">
-                  <Label className="mb-1 block">Team</Label>
+                  <Label className="mb-1 block" htmlFor="team">
+                    Team
+                  </Label>
                   <Select onValueChange={v => setTeam(v as string)}>
                     <SelectTrigger aria-label="Team">
                       <SelectValue placeholder="All" />
@@ -356,7 +362,9 @@ export default function App() {
                   </Select>
                 </div>
                 <div className="md:col-span-3">
-                  <Label className="mb-1 block">Search</Label>
+                  <Label className="mb-1 block" htmlFor="search">
+                    Search
+                  </Label>
                   <div className="relative">
                     <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
@@ -370,7 +378,9 @@ export default function App() {
               </div>
               <div className="mt-4 flex flex-wrap items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <Label className="text-sm">Mode</Label>
+                  <Label className="text-sm" htmlFor="model">
+                    Mode
+                  </Label>
                   <Tabs value={mode} onValueChange={v => setMode(v as 'exec' | 'ops')}>
                     <TabsList className="grid grid-cols-2">
                       <TabsTrigger value="exec">Exec</TabsTrigger>
@@ -746,7 +756,7 @@ function ServiceCard({
       </CardHeader>
 
       <CardContent className="pt-2">
-        {/* core metrics always visible; last deploy is "secondary" */}
+        {/* core metrics always visible; the last deploy is "secondary" */}
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
           <Metric label="p95 latency" value={`${svc.p95ms} ms`} />
           <Metric label="error rate" value={`${svc.errorRate.toFixed(2)}%`} />

@@ -109,23 +109,13 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}  # Use OIDC for secure authentication
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Upload to S3
-        run: |
-          if [ -z "${EnvSuffix}" ]; then
-            BUCKET="observa-ui"
-          else
-            BUCKET="observa-ui-${EnvSuffix}"
-          fi
-          aws s3 sync dist/ "s3://${BUCKET}/" --delete
-          echo "DEPLOYED_S3_BUCKET=${BUCKET}" >> $GITHUB_ENV      
-
       - name: Deploy CloudFormation stack
         run: |
           STACK_NAME="observa-ui"
           if [ ! -z "${{ env.EnvSuffix }}" ]; then
             STACK_NAME="observa-ui-${{ env.EnvSuffix }}"
           fi
-
+          
           aws cloudformation deploy \
             --template-file template.yaml \
             --stack-name ${STACK_NAME}  \
@@ -135,6 +125,16 @@ jobs:
               EnvSuffix=${{ env.EnvSuffix }} \
             --capabilities CAPABILITY_IAM \
             --no-fail-on-empty-changeset
+
+      - name: Upload to S3
+        run: |
+          if [ -z "${EnvSuffix}" ]; then
+            BUCKET="observa-ui"
+          else
+            BUCKET="observa-ui-${EnvSuffix}"
+          fi
+          aws s3 sync dist/ "s3://${BUCKET}/" --delete
+          echo "DEPLOYED_S3_BUCKET=${BUCKET}" >> $GITHUB_ENV      
 
       - name: Get CloudFront Distribution ID
         id: cfdist

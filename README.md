@@ -1,4 +1,4 @@
-# C1 Tech Health Dashboard — v1 (UI-only)
+# Observa UI - v1
 
 An executive-first, ops-friendly dashboard UI that surfaces the health of services across environments and regions. This repository contains the React UI built with Vite, TypeScript, and Tailwind CSS. It currently uses an in-app mock aggregator for data; it’s structured to later call a real Health Aggregator API backed by Observe queries.
 

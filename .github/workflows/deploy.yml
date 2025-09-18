@@ -122,6 +122,7 @@ jobs:
             --parameter-overrides \
               ArtifactBucket=${{ env.DEPLOYED_S3_BUCKET }} \
               TimeZone=${{ secrets.TIME_ZONE || 'America/New_York' }} \
+              SSLCertificateArn=${{ secrets.SSLCERTIFICATE_ARN }} \
               EnvSuffix=${{ env.EnvSuffix }} \
             --capabilities CAPABILITY_IAM \
             --no-fail-on-empty-changeset

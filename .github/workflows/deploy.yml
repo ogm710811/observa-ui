@@ -109,6 +109,24 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}  # Use OIDC for secure authentication
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Deploy CloudFormation stack
+        run: |
+          STACK_NAME="observa-ui"
+          if [ ! -z "${{ env.EnvSuffix }}" ]; then
+            STACK_NAME="observa-ui-${{ env.EnvSuffix }}"
+          fi
+          
+          aws cloudformation deploy \
+            --template-file template.yaml \
+            --stack-name ${STACK_NAME}  \
+            --parameter-overrides \
+              ArtifactBucket=${{ env.DEPLOYED_S3_BUCKET }} \
+              TimeZone=${{ secrets.TIME_ZONE || 'America/New_York' }} \
+              SSLCertificateArn=${{ secrets.SSLCERTIFICATE_ARN }} \
+              EnvSuffix=${{ env.EnvSuffix }} \
+            --capabilities CAPABILITY_IAM \
+            --no-fail-on-empty-changeset
+
       - name: Upload to S3
         run: |
           if [ -z "${EnvSuffix}" ]; then
@@ -119,29 +137,12 @@ jobs:
           aws s3 sync dist/ "s3://${BUCKET}/" --delete
           echo "DEPLOYED_S3_BUCKET=${BUCKET}" >> $GITHUB_ENV      
 
-      - name: Deploy CloudFormation stack
-        run: |
-          STACK_NAME="observa-ui"
-          if [ ! -z "${{ env.EnvSuffix }}" ]; then
-            STACK_NAME="observa-ui-${{ env.EnvSuffix }}"
-          fi
-
-          aws cloudformation deploy \
-            --template-file template.yaml \
-            --stack-name ${STACK_NAME}  \
-            --parameter-overrides \
-              ArtifactBucket=${{ env.DEPLOYED_S3_BUCKET }} \
-              TimeZone=${{ secrets.TIME_ZONE || 'America/New_York' }} \
-              EnvSuffix=${{ env.EnvSuffix }} \
-            --capabilities CAPABILITY_IAM \
-            --no-fail-on-empty-changeset
-
       - name: Get CloudFront Distribution ID
         id: cfdist
         run: |
           DIST_ID=$(aws cloudformation describe-stacks \
               --stack-name "observa-ui${{ env.EnvSuffix && format('-{0}', env.EnvSuffix) }}" \
-              --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDomainName'].OutputValue" \
+              --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue"  \
               --output text)
           echo "DIST_ID=${DIST_ID}" >> $GITHUB_ENV
 

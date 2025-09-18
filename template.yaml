@@ -119,8 +119,12 @@ Outputs:
   CloudFrontDomainName:
     Description: CloudFront distribution domain (for DNS/CNAME setup)
     Value: !GetAtt CloudFrontDistribution.DomainName
+  CloudFrontDistributionId:
+    Description: CloudFront distribution ID (for use in CLI commands)
+    Value: !Ref CloudFrontDistribution
   S3BucketName:
     Value: !Ref SpaS3Bucket
+
 
 
 

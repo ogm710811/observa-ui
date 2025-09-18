@@ -142,7 +142,7 @@ jobs:
         run: |
           DIST_ID=$(aws cloudformation describe-stacks \
               --stack-name "observa-ui${{ env.EnvSuffix && format('-{0}', env.EnvSuffix) }}" \
-              --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDomainName'].OutputValue" \
+              --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue"  \
               --output text)
           echo "DIST_ID=${DIST_ID}" >> $GITHUB_ENV
 

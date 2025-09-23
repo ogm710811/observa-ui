@@ -39,7 +39,9 @@ export function PreferencesDrawer({
 
         <div className="space-y-5 p-4">
           <div>
-            <Label className="mb-2 block">Default mode</Label>
+            <Label className="mb-2 block" htmlFor="Tabs">
+              Default mode
+            </Label>
             <Tabs
               value={draft.defaultMode}
               onValueChange={v => setDraft({ ...draft, defaultMode: v as 'exec' | 'ops' })}
@@ -90,7 +92,7 @@ export function PreferencesDrawer({
             </label>
 
             <div className="flex items-center gap-2 text-sm">
-              <Label>Interval (sec)</Label>
+              <Label htmlFor="input">Interval (sec)</Label>
               <input
                 className="h-9 w-24 rounded-md border border-slate-200 px-2"
                 min={10}

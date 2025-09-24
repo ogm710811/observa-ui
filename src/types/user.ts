@@ -41,3 +41,14 @@ export interface QuickAction {
   name: string;
   icon: string;
 }
+
+export interface QuickLink {
+  id: string;
+  text: string;
+  url: string;
+  icon: ReactElement;
+}
+
+export interface News {
+  text: string;
+}

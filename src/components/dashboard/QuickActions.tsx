@@ -6,7 +6,7 @@ interface QuickActionsProps {
   actions: QuickAction[];
 }
 
-export const QuickActions: React.FC<QuickActionsProps> = ({ actions }) => {
+const QuickActions: React.FC<QuickActionsProps> = ({ actions }) => {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
       <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
@@ -26,3 +26,5 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ actions }) => {
     </div>
   );
 };
+
+export default QuickActions;

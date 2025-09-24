@@ -24,7 +24,7 @@ export const KPICard: React.FC<KPICardProps> = ({ metric }) => {
   const colorClasses = {
     // All-white background with black text, no color variant
     // icon/label appearance consistent across all metrics
-    default: 'bg-gray-100 text-black',
+    default: 'bg-gray-100 text-black dark:bg-blue-900',
   };
 
   // Always use the default class

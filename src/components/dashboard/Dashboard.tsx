@@ -2,7 +2,10 @@ import {
   Activity,
   Check,
   CircleX,
+  FileStack,
   Flame,
+  Info,
+  LifeBuoy,
   Rocket,
   ShieldCheck,
   TriangleAlert,
@@ -10,10 +13,38 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
-import { Metric, RecentActivity } from '@/types/user';
+import QuickLinks from '@/components/dashboard/QuickLinks';
+import WhatIsNew from '@/components/dashboard/WhatIsNew';
+import { Metric, News, QuickLink, RecentActivity } from '@/types/user';
 
 import { KPICard } from './KPICard';
 import { RecentActivities } from './RecentActivities';
+
+const recentActivities: RecentActivity[] = [
+  { text: 'Service deployment completed for API Gateway', time: '2 minutes ago' },
+  { text: 'Security scan passed for Payment Service', time: '15 minutes ago' },
+  { text: 'Cost optimization report generated', time: '1 hour ago' },
+  { text: 'New service registered: Analytics API', time: '3 hours ago' },
+];
+
+const news: News[] = [
+  { text: 'Seamless nav to other SPAs via left sidebar links.' },
+  { text: 'PingId user identification shown in header profile.' },
+  { text: 'Skeleton loaders + accessible error state patterns.' },
+];
+
+// export const quickActions: QuickAction[] = [
+//   { name: 'Deploy Service', icon: '🚀' },
+//   { name: 'View Logs', icon: '📝' },
+//   { name: 'Run Tests', icon: '🧪' },
+//   { name: 'Check Security', icon: '🔒' },
+// ];
+
+const quickLinks: QuickLink[] = [
+  { id: '0', text: 'Documentation', url: '#docs', icon: <FileStack /> },
+  { id: '1', text: 'Get Help', url: '#docs', icon: <LifeBuoy /> },
+  { id: '2', text: 'FAQ', url: '#docs', icon: <Info /> },
+];
 
 export const Dashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<Metric[]>([]);
@@ -102,20 +133,6 @@ export const Dashboard: React.FC = () => {
     }
   };
 
-  const recentActivities: RecentActivity[] = [
-    { text: 'Service deployment completed for API Gateway', time: '2 minutes ago' },
-    { text: 'Security scan passed for Payment Service', time: '15 minutes ago' },
-    { text: 'Cost optimization report generated', time: '1 hour ago' },
-    { text: 'New service registered: Analytics API', time: '3 hours ago' },
-  ];
-
-  // const quickActions: QuickAction[] = [
-  //   { name: 'Deploy Service', icon: '🚀' },
-  //   { name: 'View Logs', icon: '📝' },
-  //   { name: 'Run Tests', icon: '🧪' },
-  //   { name: 'Check Security', icon: '🔒' },
-  // ];
-
   if (loading) {
     return (
       <div className="space-y-6">
@@ -171,21 +188,21 @@ export const Dashboard: React.FC = () => {
       <nav aria-label="Breadcrumb" className="flex">
         <ol className="inline-flex items-center space-x-1 md:space-x-3">
           <li className="inline-flex items-center">
-            <a className="text-gray-700 hover:text-blue-600 dark:text-gray-300" href="#123">
+            <a className="text-gray-700 dark:text-gray-300" href="#123">
               Home
             </a>
           </li>
           <li>
-            <div className="flex items-center">
-              <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  clipRule="evenodd"
-                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  fillRule="evenodd"
-                />
-              </svg>
-              <span className="ml-1 text-gray-500 md:ml-2">Dashboard</span>
-            </div>
+            {/*<div className="flex items-center">*/}
+            {/*  <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">*/}
+            {/*    <path*/}
+            {/*      clipRule="evenodd"*/}
+            {/*      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"*/}
+            {/*      fillRule="evenodd"*/}
+            {/*    />*/}
+            {/*  </svg>*/}
+            {/*  <span className="ml-1 text-gray-500 md:ml-2">Dashboard</span>*/}
+            {/*</div>*/}
           </li>
         </ol>
       </nav>
@@ -198,12 +215,16 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Additional Dashboard Sections */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Activity */}
         <RecentActivities activities={recentActivities} />
 
         {/* Quick Actions */}
         {/*<QuickActions actions={quickActions} />*/}
+        <div className="grid grid-rows-2 lg:grid-rows-2 gap-6">
+          <QuickLinks links={quickLinks} />
+          <WhatIsNew news={news} />
+        </div>
       </div>
     </div>
   );

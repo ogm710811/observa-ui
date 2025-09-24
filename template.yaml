@@ -10,13 +10,13 @@ Parameters:
     Description: ACM Certificate ARN (must be in us-east-1) for custom domain
     Type: String
   MainDomain:
-    Description: Main custom domain for prod (e.g., observa-ui.ogm710811.com)
+    Description: Main custom domain for prod (e.g., observa-ui.ogm710811.org)
     Type: String
-    Default: observa-ui.ogm710811.com
+    Default: observa-ui.ogm710811.org
   PreviewDomain:
-    Description: PR/preview custom domain pattern (e.g., observa-ui-preview.ogm710811.com)
+    Description: PR/preview custom domain pattern (e.g., observa-ui-preview.ogm710811.org)
     Type: String
-    Default: observa-ui-preview.ogm710811.com
+    Default: observa-ui-preview.ogm710811.org
 
 Conditions:
   IsMain: !Equals [ !Ref EnvSuffix, "" ]
@@ -119,8 +119,8 @@ Outputs:
   CloudFrontDomainName:
     Description: CloudFront distribution domain (for DNS/CNAME setup)
     Value: !GetAtt CloudFrontDistribution.DomainName
+  CloudFrontDistributionId:
+    Description: CloudFront distribution ID (for use in CLI commands)
+    Value: !Ref CloudFrontDistribution
   S3BucketName:
     Value: !Ref SpaS3Bucket
-
-
-

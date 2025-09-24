@@ -85,7 +85,7 @@ Resources:
           - !If
             - IsMain
             - !Ref MainDomain
-            - !Sub "${PreviewDomain}"
+            - !Sub "observa-ui-pr-${EnvSuffix}-preview.ogm710811.org"
         DefaultRootObject: index.html
         Origins:
           - Id: S3Origin

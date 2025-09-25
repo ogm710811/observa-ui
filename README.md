@@ -1,4 +1,4 @@
-# Tech Health Dashboard — v1 (UI-only)
+# Tech Health Dashboard — (UI-only)
 
 An executive-first, ops-friendly dashboard UI that surfaces the health of services. This repository contains the React UI built with Vite, TypeScript, and Tailwind CSS.
 

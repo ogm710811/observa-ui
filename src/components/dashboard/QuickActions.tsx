@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { QuickAction } from '@/types/user';
+import { QuickAction } from '@/types/dashboard';
 
 interface QuickActionsProps {
   actions: QuickAction[];

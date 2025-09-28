@@ -1,21 +1,11 @@
-import {
-  Activity,
-  Check,
-  CircleX,
-  FileStack,
-  Flame,
-  Info,
-  LifeBuoy,
-  Rocket,
-  ShieldCheck,
-  TriangleAlert,
-  Zap,
-} from 'lucide-react';
+import { FileStack, Info, LifeBuoy } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
+import PageHeader from '@/components/common/PageHeader';
 import QuickLinks from '@/components/dashboard/QuickLinks';
 import WhatIsNew from '@/components/dashboard/WhatIsNew';
-import { Metric, News, QuickLink, RecentActivity } from '@/types/user';
+import { Metric, News, QuickLink, RecentActivity } from '@/types/dashboard';
+import { Header } from '@/types/pages';
 
 import { KPICard } from './KPICard';
 import { RecentActivities } from './RecentActivities';
@@ -46,6 +36,11 @@ const quickLinks: QuickLink[] = [
   { id: '2', text: 'FAQ', url: '#docs', icon: <Info /> },
 ];
 
+const pageHeader: Header = {
+  title: 'Portal Overview',
+  subtitle: 'Real-time metrics and health status of all services',
+};
+
 export const Dashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<Metric[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,67 +58,59 @@ export const Dashboard: React.FC = () => {
       setMetrics([
         {
           label: 'Total Services',
+          status: 'total',
           value: 247,
           change: 12,
           trend: 'up',
-          color: 'blue',
-          icon: <Activity />,
         },
         {
           label: 'Healthy Services',
+          status: 'healthy',
           value: 223,
           change: 5,
           trend: 'up',
-          color: 'green',
-          icon: <Check className="text-favorable" />,
         },
         {
           label: 'Services with Warnings',
+          status: 'warning',
           value: 18,
           change: -2,
           trend: 'down',
-          color: 'yellow',
-          icon: <TriangleAlert className="text-warning" />,
         },
         {
           label: 'Services Down',
+          status: 'critical',
           value: 6,
           change: 1,
           trend: 'up',
-          color: 'red',
-          icon: <CircleX className="text-critical" />,
         },
         {
           label: 'Avg SLO Burn Rate',
+          status: 'slo',
           value: '0.42',
           change: -0.08,
           trend: 'down',
-          color: 'purple',
-          icon: <Flame />,
         },
         {
           label: 'Recent Deployments',
+          status: 'recent',
           value: 34,
           change: 8,
           trend: 'up',
-          color: 'indigo',
-          icon: <Rocket />,
         },
         {
           label: 'Security Score',
+          status: 'security',
           value: '94%',
           change: 2,
           trend: 'up',
-          color: 'teal',
-          icon: <ShieldCheck />,
         },
         {
           label: 'Avg Response Time',
+          status: 'response',
           value: '124ms',
           change: -15,
           trend: 'down',
-          color: 'orange',
-          icon: <Zap />,
         },
       ]);
       setLoading(false);
@@ -177,12 +164,7 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Portal Overview</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Real-time metrics and health status of all services
-        </p>
-      </div>
+      <PageHeader pageHeader={pageHeader} />
 
       {/* Breadcrumbs */}
       <nav aria-label="Breadcrumb" className="flex">

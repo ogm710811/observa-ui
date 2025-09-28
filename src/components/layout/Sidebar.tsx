@@ -1,8 +1,9 @@
 import { ChartNoAxesCombined, ChevronsLeft, FileStack, UserPlus } from 'lucide-react';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Tool } from '@/types/user';
+import { Tool } from '@/types/dashboard';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -21,20 +22,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const tools: Tool[] = [
     {
+      id: '0',
+      name: 'Monitoring',
+      url: '/monitoring',
+      icon: <ChartNoAxesCombined />,
+      category: 'Observability',
+    },
+    {
       id: '1',
       name: 'Demo Tenant',
       url: '#api-gateway',
       icon: <UserPlus />,
       category: 'Infrastructure',
     },
-    {
-      id: '4',
-      name: 'Monitoring',
-      url: '#monitoring',
-      icon: <ChartNoAxesCombined />,
-      category: 'Observability',
-    },
-    { id: '8', name: 'Documentation', url: '#docs', icon: <FileStack />, category: 'Resources' },
+    { id: '2', name: 'Documentation', url: '#docs', icon: <FileStack />, category: 'Resources' },
     // { id: '2', name: 'Service Mesh', url: '#service-mesh', icon: '🕸️', category: 'Infrastructure' },
     // { id: '1', name: 'API Gateway', url: '#api-gateway', icon: '🔌', category: 'Infrastructure' },
     // { id: '2', name: 'Service Mesh', url: '#service-mesh', icon: '🕸️', category: 'Infrastructure' },
@@ -160,17 +161,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     {isCollapsed ? (
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <a
+                          <Link
                             className={`
                         flex items-center px-3 py-3 rounded-lg
                         hover:bg-blue-50 dark:hover:bg-gray-700
                         transition-all duration-200
                         group relative
                       `}
-                            href={tool.url}
+                            to={tool.url}
                           >
                             <span className="text-2xl">{tool.icon}</span>
-                          </a>
+                          </Link>
                         </TooltipTrigger>
                         <TooltipContent
                           className="bg-gray-800 text-white"

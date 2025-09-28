@@ -1,7 +1,7 @@
 import { CircleSmall } from 'lucide-react';
 import React from 'react';
 
-import { News } from '@/types/user';
+import { News } from '@/types/dashboard';
 
 interface WhatIsNewProps {
   news: News[];

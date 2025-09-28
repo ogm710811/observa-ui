@@ -1,7 +1,7 @@
 import { CircleSmall } from 'lucide-react';
 import React from 'react';
 
-import { RecentActivity } from '@/types/user';
+import { RecentActivity } from '@/types/dashboard';
 
 interface RecentActivityProps {
   activities: RecentActivity[];

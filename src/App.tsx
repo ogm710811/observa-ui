@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+
+import { AppRouter } from '@/Router';
 
 import { LoadingScreen } from './components/common/LoadingScreen';
 import { ThemeProvider } from './components/common/ThemeProvider';
-import { Dashboard } from './components/dashboard/Dashboard';
 import { Layout } from './components/layout/Layout';
-import { User } from './types/user';
+import { User } from './types/dashboard';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -28,9 +30,11 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <Layout user={user}>
-        <Dashboard />
-      </Layout>
+      <BrowserRouter>
+        <Layout user={user}>
+          <AppRouter /* user={user} */ />
+        </Layout>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }

@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 
-import { User } from '@/types/user';
+import { User } from '@/types/dashboard';
 
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';

@@ -17,11 +17,10 @@ export interface Notification {
 
 export interface Metric {
   label: string;
+  status: string;
   value: string | number;
   change?: number;
   trend?: 'up' | 'down';
-  color: string;
-  icon: ReactElement;
 }
 
 export interface Tool {

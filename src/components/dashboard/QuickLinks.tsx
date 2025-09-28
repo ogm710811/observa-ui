@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { QuickLink } from '@/types/user';
+import { QuickLink } from '@/types/dashboard';
 
 interface QuickLinksProps {
   links: QuickLink[];

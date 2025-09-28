@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 
 import { useTheme } from '@/contexts/ThemeContext';
-import { User } from '@/types/user';
+import { User } from '@/types/dashboard';
 
 interface HeaderProps {
   user: User | null;

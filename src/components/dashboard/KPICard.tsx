@@ -1,40 +1,71 @@
+import {
+  Activity,
+  Check,
+  CircleX,
+  Flame,
+  Rocket,
+  ShieldCheck,
+  TriangleAlert,
+  Zap,
+} from 'lucide-react';
 import React from 'react';
 
-import { Metric } from '@/types/user';
+import { Metric } from '@/types/dashboard';
 
 interface KPICardProps {
   metric: Metric;
 }
 
-export const KPICard: React.FC<KPICardProps> = ({ metric }) => {
-  // const colorClasses = {
-  //   blue: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-  //   green: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-  //   yellow: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-  //   red: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-  //   purple: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
-  //   indigo: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300',
-  //   teal: 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300',
-  //   orange: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
-  // };
-  //
-  // const bgColorClass = colorClasses[metric.color as keyof typeof colorClasses] || colorClasses.blue;
-
-  // Use only black & white color classes
-  const colorClasses = {
-    // All-white background with black text, no color variant
-    // icon/label appearance consistent across all metrics
-    default: 'bg-gray-100 text-black dark:bg-blue-900',
+export const KPICard = ({ metric }: KPICardProps) => {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'total':
+        return 'bg-blue-100 text-blue-600';
+      case 'healthy':
+        return 'text-favorable bg-green-50';
+      case 'warning':
+        return 'text-warning bg-yellow-50';
+      case 'critical':
+        return 'text-critical bg-red-50';
+      case 'slo':
+        return 'text-orange-500 bg-orange-50';
+      case 'recent':
+        return 'text-cyan-500 bg-cyan-50';
+      case 'security':
+        return 'text-indigo-500 bg-indigo-50';
+      case 'response':
+        return 'text-teal-500 bg-teal-50';
+      default:
+        return 'text-gray-600 bg-gray-50';
+    }
   };
 
-  // Always use the default class
-  const bgColorClass = colorClasses.default;
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'total':
+        return <Activity />;
+      case 'healthy':
+        return <Check />;
+      case 'warning':
+        return <TriangleAlert />;
+      case 'critical':
+        return <CircleX />;
+      case 'slo':
+        return <Flame />;
+      case 'recent':
+        return <Rocket />;
+      case 'security':
+        return <ShieldCheck />;
+      case 'response':
+        return <Zap />;
+    }
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 group">
       <div className="flex items-start justify-between mb-4">
-        <div className={`p-3 rounded-lg ${bgColorClass}`}>
-          <span className="text-2xl">{metric.icon}</span>
+        <div className={`p-3 rounded-lg ${getStatusColor(metric.status)}`}>
+          <span className="text-2xl">{getStatusIcon(metric.status)}</span>
         </div>
         {metric.trend && (
           <div

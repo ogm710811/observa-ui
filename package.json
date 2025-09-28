@@ -9,8 +9,8 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
-    "check-format": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,md}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md,html}\"",
+    "check-format": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,md,html}\""
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.0.0",
@@ -22,6 +22,7 @@
     "lucide-react": "^0.544.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^7.9.3",
     "recharts": "^2.12.7",
     "tailwind-merge": "^2.3.0"
   },

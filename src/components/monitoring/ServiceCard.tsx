@@ -54,7 +54,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDetailsClick }) =>
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3">
-            <ServiceStatusBadge status={service.status} showIcon={true} size="md" />
+            <ServiceStatusBadge showIcon={true} size="md" status={service.status} />
             <div>
               <h3 className="text-lg font-semibold text-gray-900">{service.name}</h3>
               <div className="flex items-center gap-2 mt-1">

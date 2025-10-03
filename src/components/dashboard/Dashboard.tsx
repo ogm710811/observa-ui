@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import PageHeader from '@/components/common/PageHeader';
 import QuickLinks from '@/components/dashboard/QuickLinks';
 import WhatIsNew from '@/components/dashboard/WhatIsNew';
+import { mockServices } from '@/mock/ServicesMockData';
 import { Metric, News, QuickLink, RecentActivity } from '@/types/dashboard';
 import { Header } from '@/types/pages';
 
@@ -55,60 +56,132 @@ export const Dashboard: React.FC = () => {
       // Simulated API call
       await new Promise(resolve => setTimeout(resolve, 1500));
 
+      // Calculate metrics from mockServices
+      const totalServices = mockServices.length;
+      const healthyServices = mockServices.filter(s => s.status === 'healthy').length;
+      const warningServices = mockServices.filter(s => s.status === 'warning').length;
+      const downServices = mockServices.filter(s => s.status === 'down').length;
+      const withinTarget = mockServices.filter(s => s.sloBurnRate < 1).length;
+      const overBudget = mockServices.filter(s => s.sloBurnRate >= 1).length;
+      const withinTargetServices = mockServices.filter(s => s.sloBurnRate < 1);
+      const overBudgetServices = mockServices.filter(s => s.sloBurnRate >= 1);
+
+      const avgWithinTarget =
+        withinTargetServices.length > 0
+          ? (
+              withinTargetServices.reduce((sum, s) => sum + s.sloBurnRate, 0) /
+              withinTargetServices.length
+            ).toFixed(2)
+          : '0.00';
+
+      const avgOverBudget =
+        overBudgetServices.length > 0
+          ? (
+              overBudgetServices.reduce((sum, s) => sum + s.sloBurnRate, 0) /
+              overBudgetServices.length
+            ).toFixed(2)
+          : '0.00';
+
+      // const avgBurnRate =
+      //   totalServices > 0
+      //     ? (mockServices.reduce((acc, s) => acc + s.sloBurnRate, 0) / totalServices).toFixed(2)
+      //     : '0.00';
+
+      const recentDeployments = mockServices.filter(s => {
+        const deploymentDate = new Date(s.lastDeployment);
+        const twoDaysAgo = new Date();
+        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+        return deploymentDate > twoDaysAgo;
+      }).length;
+
+      const avgSecurityScore =
+        totalServices > 0
+          ? Math.round(mockServices.reduce((acc, s) => acc + s.securityScore, 0) / totalServices) +
+            '%'
+          : '0%';
+
+      const avgResponseTime =
+        totalServices > 0
+          ? Math.round(mockServices.reduce((acc, s) => acc + s.responseTime, 0) / totalServices) +
+            'ms'
+          : '0ms';
+
       setMetrics([
         {
           label: 'Total Services',
           status: 'total',
-          value: 247,
+          value: totalServices,
           change: 12,
           trend: 'up',
         },
         {
           label: 'Healthy Services',
           status: 'healthy',
-          value: 223,
+          value: healthyServices,
           change: 5,
+          trend: 'up',
+        },
+        {
+          label: 'Services Down',
+          status: 'critical',
+          value: downServices,
+          change: 1,
           trend: 'up',
         },
         {
           label: 'Services with Warnings',
           status: 'warning',
-          value: 18,
+          value: warningServices,
           change: -2,
           trend: 'down',
         },
+        // {
+        //   label: 'Avg SLO Burn Rate',
+        //   status: 'slo',
+        //   value: 10,
+        //   change: -0.08,
+        //   trend: 'down',
+        // },
         {
-          label: 'Services Down',
-          status: 'critical',
-          value: 6,
-          change: 1,
-          trend: 'up',
-        },
-        {
-          label: 'Avg SLO Burn Rate',
-          status: 'slo',
-          value: '0.42',
-          change: -0.08,
+          label: 'SLO Within Target',
+          status: 'healthy',
+          value: withinTarget,
+          change: Number(avgWithinTarget),
           trend: 'down',
+          breakdown: {
+            avgBurnRate: Number(avgWithinTarget),
+            percent: totalServices > 0 ? Math.round((withinTarget / totalServices) * 100) : 0,
+          },
         },
         {
-          label: 'Recent Deployments',
-          status: 'recent',
-          value: 34,
-          change: 8,
+          label: 'SLO Over Budget',
+          status: 'critical',
+          value: overBudget,
+          change: Number(avgOverBudget),
           trend: 'up',
+          breakdown: {
+            avgBurnRate: Number(avgOverBudget),
+            percent: totalServices > 0 ? Math.round((overBudget / totalServices) * 100) : 0,
+          },
         },
+        // {
+        //   label: 'Recent Deployments',
+        //   status: 'recent',
+        //   value: recentDeployments,
+        //   change: 8,
+        //   trend: 'up',
+        // },
         {
           label: 'Security Score',
           status: 'security',
-          value: '94%',
+          value: avgSecurityScore,
           change: 2,
           trend: 'up',
         },
         {
           label: 'Avg Response Time',
           status: 'response',
-          value: '124ms',
+          value: avgResponseTime,
           change: -15,
           trend: 'down',
         },
@@ -198,15 +271,14 @@ export const Dashboard: React.FC = () => {
 
       {/* Additional Dashboard Sections */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Activity */}
-        <RecentActivities activities={recentActivities} />
-
         {/* Quick Actions */}
         {/*<QuickActions actions={quickActions} />*/}
         <div className="grid grid-rows-2 lg:grid-rows-2 gap-6">
           <QuickLinks links={quickLinks} />
           <WhatIsNew news={news} />
         </div>
+        {/* Recent Activity */}
+        <RecentActivities activities={recentActivities} />
       </div>
     </div>
   );

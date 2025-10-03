@@ -87,12 +87,12 @@ export const Dashboard: React.FC = () => {
       //     ? (mockServices.reduce((acc, s) => acc + s.sloBurnRate, 0) / totalServices).toFixed(2)
       //     : '0.00';
 
-      const recentDeployments = mockServices.filter(s => {
-        const deploymentDate = new Date(s.lastDeployment);
-        const twoDaysAgo = new Date();
-        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-        return deploymentDate > twoDaysAgo;
-      }).length;
+      // const recentDeployments = mockServices.filter(s => {
+      //   const deploymentDate = new Date(s.lastDeployment);
+      //   const twoDaysAgo = new Date();
+      //   twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+      //   return deploymentDate > twoDaysAgo;
+      // }).length;
 
       const avgSecurityScore =
         totalServices > 0

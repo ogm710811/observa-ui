@@ -1,15 +1,15 @@
-import { Activity } from "lucide-react";
-import React, { useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Activity } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
-import Breadcrumb from "@/components/common/Breadcrumb";
-import PageHeader from "@/components/common/PageHeader";
-import ServiceCard from "@/components/observability/ServiceCard";
-import ServiceFilters from "@/components/observability/ServiceFilters";
-import ServiceTable from "@/components/observability/ServiceTable";
-import { mockServices } from "@/mock/ServicesMockData";
-import { FilterOptions, Service, ServiceCategory, ServiceEnvironment } from "@/types/monitoring";
-import { BreadcrumbItem, Header } from "@/types/pages";
+import Breadcrumb from '@/components/common/Breadcrumb';
+import PageHeader from '@/components/common/PageHeader';
+import ServiceCard from '@/components/observability/ServiceCard';
+import ServiceFilters from '@/components/observability/ServiceFilters';
+import ServiceTable from '@/components/observability/ServiceTable';
+import { mockServices } from '@/mock/ServicesMockData';
+import { FilterOptions, Service, ServiceCategory, ServiceEnvironment } from '@/types/monitoring';
+import { BreadcrumbItem, Header } from '@/types/pages';
 
 const pageHeader: Header = {
   title: 'Observability',

@@ -1,32 +1,47 @@
 import { Activity } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import Breadcrumb from '@/components/common/Breadcrumb';
 import PageHeader from '@/components/common/PageHeader';
-import ServiceCard from '@/components/monitoring/ServiceCard';
-import ServiceFilters from '@/components/monitoring/ServiceFilters';
-import ServiceTable from '@/components/monitoring/ServiceTable';
+import ServiceCard from '@/components/observability/ServiceCard';
+import ServiceFilters from '@/components/observability/ServiceFilters';
+import ServiceTable from '@/components/observability/ServiceTable';
 import { mockServices } from '@/mock/ServicesMockData';
 import { FilterOptions, Service, ServiceCategory, ServiceEnvironment } from '@/types/monitoring';
 import { BreadcrumbItem, Header } from '@/types/pages';
 
 const pageHeader: Header = {
-  title: 'Service Monitoring',
+  title: 'Observability',
   subtitle: 'Real-time metrics by service',
 };
 
 const breadcrumbItems: BreadcrumbItem[] = [
   { label: 'Home', href: '/' },
-  { label: 'Monitoring' }, // current page, not a link
+  { label: 'Observability' }, // current page, not a link
 ];
 
-const Monitoring: React.FC = () => {
-  const [filters, setFilters] = useState<FilterOptions>({
+const Observability: React.FC = () => {
+  const location = useLocation();
+
+  // Add this inside your component just before the state hooks:
+  const initialFilters: FilterOptions = {
     search: '',
     status: 'all',
     environment: 'all',
     category: 'all',
-  });
+  };
+
+  // Check if any route state is present and prefill the initial filter accordingly
+  if (location.state) {
+    // set only when NOT an SLO card
+    if (!location.state.slo && location.state.status) {
+      initialFilters.status = location.state.status;
+    }
+    // do NOT set status for SLOs!
+  }
+
+  const [filters, setFilters] = useState<FilterOptions>(initialFilters);
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [sortField, setSortField] = useState<keyof Service>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
@@ -43,6 +58,14 @@ const Monitoring: React.FC = () => {
   // Filter and sort services
   const filteredServices = useMemo(() => {
     let filtered = mockServices.filter(service => {
+      // Apply SLO filter when coming from SLO card
+      if (location.state?.slo === 'withinTarget' && !(service.sloBurnRate < 1)) {
+        return false;
+      }
+      if (location.state?.slo === 'overBudget' && !(service.sloBurnRate >= 1)) {
+        return false;
+      }
+
       const matchesSearch = service.name.toLowerCase().includes(filters.search.toLowerCase());
       const matchesStatus = filters.status === 'all' || service.status === filters.status;
       const matchesCategory = filters.category === 'all' || service.category === filters.category;
@@ -72,7 +95,15 @@ const Monitoring: React.FC = () => {
     }
 
     return filtered;
-  }, [filters, sortField, sortDirection]);
+  }, [
+    sortField,
+    location.state?.slo,
+    filters.search,
+    filters.status,
+    filters.category,
+    filters.environment,
+    sortDirection,
+  ]);
 
   const handleSort = (field: keyof Service) => {
     if (sortField === field) {
@@ -165,4 +196,4 @@ const Monitoring: React.FC = () => {
   );
 };
 
-export default Monitoring;
+export default Observability;

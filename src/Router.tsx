@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import Home from '@/pages/Home';
-import Monitoring from '@/pages/Monitoring';
+import Observability from '@/pages/Observability';
 // import { Settings } from './components/settings/Settings'; // Example of future route
 
 // Optionally accept props (like user) if you want to pass them to routes/layouts
@@ -14,7 +14,7 @@ export function AppRouter(/* { user }: RouterProps */) {
   return (
     <Routes>
       <Route element={<Home />} path="/" />
-      <Route element={<Monitoring />} path="/monitoring" />
+      <Route element={<Observability />} path="/observability" />
     </Routes>
   );
 }

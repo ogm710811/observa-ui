@@ -1,9 +1,9 @@
 import React, { ReactNode, useState } from 'react';
 
+import Navbar from '@/components/layout/Navbar';
 import { User } from '@/types/dashboard';
 
 import { Header } from './Header';
-import { Sidebar } from './Sidebar';
 
 interface LayoutProps {
   user: User | null;
@@ -19,7 +19,7 @@ export const Layout: React.FC<LayoutProps> = ({ user, children }) => {
       <Header user={user} onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
       <div className="flex h-[calc(100vh-64px)] pt-16">
-        <Sidebar
+        <Navbar
           isCollapsed={sidebarCollapsed}
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}

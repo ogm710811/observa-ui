@@ -1,7 +1,7 @@
 import React from 'react';
 
-import ServiceStatusBadge from '@/components/monitoring/ServiceStatusBadge';
-import SortableHeader from '@/components/monitoring/SortableHeader';
+import ServiceStatusBadge from '@/components/observability/ServiceStatusBadge';
+import SortableHeader from '@/components/observability/SortableHeader';
 import { Service } from '@/types/monitoring';
 
 interface ServiceTableProps {

@@ -12,6 +12,7 @@ import {
   Zap,
 } from 'lucide-react';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import SLOCard, { SLO_VARIANTS } from '@/components/dashboard/SLOCard';
 import { Metric } from '@/types/dashboard';
@@ -56,6 +57,8 @@ const statusIconMap: Record<Status, React.ReactNode> = {
 const getStatusIcon = (status: string) => statusIconMap[status as Status] || null;
 
 export const KPICard = ({ metric }: KPICardProps) => {
+  const navigate = useNavigate();
+
   // Render SLO cards with variant
   if (SLO_VARIANTS[metric.label]) {
     return <SLOCard metric={metric} />;
@@ -91,7 +94,22 @@ export const KPICard = ({ metric }: KPICardProps) => {
       </div>
       <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700">
         <div className="flex justify-end">
-          <button className="text-xs text-primary hover:text-blue-700 font-medium flex items-center gap-1">
+          <button
+            className="text-xs text-primary hover:text-blue-700 font-medium flex items-center gap-1"
+            onClick={() => {
+              // Optionally, send other filters for classic KPIs if needed.
+              // Here is an example: filter by status
+              if (metric.label.includes('Healthy')) {
+                navigate('/observability', { state: { status: 'healthy' } });
+              } else if (metric.label.includes('Down')) {
+                navigate('/observability', { state: { status: 'down' } });
+              } else if (metric.label.includes('Warning')) {
+                navigate('/observability', { state: { status: 'warning' } });
+              } else {
+                navigate('/observability'); // fallback: no filter
+              }
+            }}
+          >
             Details
             <ExternalLink className="w-3 h-3" />
           </button>

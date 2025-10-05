@@ -1,5 +1,6 @@
 import { ExternalLink, Flame, Target, TrendingDown, TrendingUp } from 'lucide-react';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Metric } from '@/types/dashboard';
 
@@ -25,6 +26,8 @@ export const SLO_VARIANTS = {
 };
 
 const SLOCard: React.FC<{ metric: Metric }> = ({ metric }) => {
+  const navigate = useNavigate();
+
   const config = SLO_VARIANTS[metric.label];
   if (!config) return null;
   const { Icon, iconBg, iconColor, trendColor, TrendingIcon, valueColor, breakdownColor } = config;
@@ -60,7 +63,17 @@ const SLOCard: React.FC<{ metric: Metric }> = ({ metric }) => {
       </div>
       <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700">
         <div className="flex justify-end">
-          <button className="text-xs text-primary hover:text-blue-700 font-medium flex items-center gap-1">
+          <button
+            className="text-xs text-primary hover:text-blue-700 font-medium flex items-center gap-1"
+            onClick={() => {
+              navigate('/observability', {
+                state: {
+                  // Use a key to signal what kind of SLO card was clicked.
+                  slo: metric.label === 'SLO Within Target' ? 'withinTarget' : 'overBudget',
+                },
+              });
+            }}
+          >
             Details
             <ExternalLink className="w-3 h-3" />
           </button>

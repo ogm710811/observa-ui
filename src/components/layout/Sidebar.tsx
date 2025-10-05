@@ -18,7 +18,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onClose,
   onToggleCollapse,
 }) => {
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [activeCategory] = useState('all');
 
   const tools: Tool[] = [
     {
@@ -45,7 +45,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     // { id: '7', name: 'Cost Optimizer', url: '#costs', icon: '💰', category: 'FinOps' },
   ];
 
-  const categories = ['all', ...Array.from(new Set(tools.map(t => t.category || '')))];
+  // const categories = ['all', ...Array.from(new Set(tools.map(t => t.category || '')))];
   const filteredTools =
     activeCategory === 'all' ? tools : tools.filter(t => t.category === activeCategory);
 
@@ -77,55 +77,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
           ${isCollapsed ? 'w-20' : 'w-64'}
         `}
       >
-        <div className="flex flex-col h-full">
-          {/* Collapse Toggle */}
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-            <button
-              aria-label="Toggle sidebar"
-              className="hidden lg:flex items-center justify-center w-full p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              onClick={onToggleCollapse}
-            >
-              <ChevronsLeft className={`transition-transform ${isCollapsed ? 'rotate-180' : ''}`} />
-              {/*<svg*/}
-              {/*  className={`w-5 h-5 transition-transform ${isCollapsed ? 'rotate-180' : ''}`}*/}
-              {/*  fill="none"*/}
-              {/*  stroke="currentColor"*/}
-              {/*  viewBox="0 0 24 24"*/}
-              {/*>*/}
-              {/*  <path*/}
-              {/*    d="M11 19l-7-7 7-7m8 14l-7-7 7-7"*/}
-              {/*    strokeLinecap="round"*/}
-              {/*    strokeLinejoin="round"*/}
-              {/*    strokeWidth={2}*/}
-              {/*  />*/}
-              {/*</svg>*/}
-            </button>
-          </div>
-
+        <div className="flex flex-col h-full relative">
           {/* Category Filter */}
-          {!isCollapsed && (
-            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-              <label
-                className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                htmlFor="category"
-              >
-                Categories
-              </label>
-              <select
-                className="mt-2 w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                id="category"
-                name="category"
-                value={activeCategory}
-                onChange={e => setActiveCategory(e.target.value)}
-              >
-                {categories.map(cat => (
-                  <option key={cat} value={cat}>
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+          {/*{!isCollapsed && (*/}
+          {/*  <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">*/}
+          {/*    <label*/}
+          {/*      className="text-xs font-semibold text-gray-500 uppercase tracking-wider"*/}
+          {/*      htmlFor="category"*/}
+          {/*    >*/}
+          {/*      Categories*/}
+          {/*    </label>*/}
+          {/*    <select*/}
+          {/*      className="mt-2 w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"*/}
+          {/*      id="category"*/}
+          {/*      name="category"*/}
+          {/*      value={activeCategory}*/}
+          {/*      onChange={e => setActiveCategory(e.target.value)}*/}
+          {/*    >*/}
+          {/*      {categories.map(cat => (*/}
+          {/*        <option key={cat} value={cat}>*/}
+          {/*          {cat.charAt(0).toUpperCase() + cat.slice(1)}*/}
+          {/*        </option>*/}
+          {/*      ))}*/}
+          {/*    </select>*/}
+          {/*  </div>*/}
+          {/*)}*/}
 
           {/* Tools List */}
           <TooltipProvider delayDuration={0} skipDelayDuration={0}>
@@ -203,8 +179,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </nav>
           </TooltipProvider>
 
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+            <button
+              aria-label="Toggle sidebar"
+              className="hidden lg:flex items-center justify-center w-full p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              onClick={onToggleCollapse}
+            >
+              <ChevronsLeft className={`transition-transform ${isCollapsed ? 'rotate-180' : ''}`} />
+            </button>
+          </div>
+
           {/* Footer */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="relative p-4 border-t border-gray-200 dark:border-gray-700 flex flex-col items-center">
             {!isCollapsed ? (
               <div className="text-xs text-gray-500 dark:text-gray-400">
                 <p>Portal Hub v1.0.0</p>

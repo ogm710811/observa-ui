@@ -49,7 +49,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDetailsClick }) =>
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-all hover:border-blue-300">
+    <div className="flex flex-col h-full bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-all hover:border-blue-300">
       {/* Service Header */}
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-start justify-between mb-3">
@@ -154,7 +154,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDetailsClick }) =>
       )}
 
       {/* Footer */}
-      <div className="px-6 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between rounded-b-lg">
+      <div className="flex justify-end mt-auto px-6 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between rounded-b-lg">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <Calendar className="w-3 h-3" />
           <span>Last deploy: {service.lastDeployment}</span>

@@ -21,6 +21,10 @@ export interface Metric {
   value: string | number;
   change?: number;
   trend?: 'up' | 'down';
+  breakdown?: {
+    avgBurnRate: number;
+    percent: number;
+  };
 }
 
 export interface Tool {

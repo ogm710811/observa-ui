@@ -1,8 +1,8 @@
-import { ExternalLink, Flame, Target, TrendingDown, TrendingUp } from "lucide-react";
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import { ExternalLink, Flame, Target, TrendingDown, TrendingUp } from 'lucide-react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { Metric } from "@/types/dashboard";
+import { Metric } from '@/types/dashboard';
 
 export const SLO_VARIANTS = {
   'SLO Within Target': {

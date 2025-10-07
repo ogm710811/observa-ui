@@ -2,14 +2,13 @@ import { FileStack, Info, LifeBuoy } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 import PageHeader from '@/components/common/PageHeader';
-import QuickLinks from '@/components/dashboard/QuickLinks';
-import WhatIsNew from '@/components/dashboard/WhatIsNew';
+import { KPICard } from '@/components/observa-dashboard/KPICard';
+import QuickLinks from '@/components/observa-dashboard/QuickLinks';
+import { RecentActivities } from '@/components/observa-dashboard/RecentActivities';
+import WhatIsNew from '@/components/observa-dashboard/WhatIsNew';
 import { mockServices } from '@/mock/ServicesMockData';
 import { Metric, News, QuickLink, RecentActivity } from '@/types/dashboard';
 import { Header } from '@/types/pages';
-
-import { KPICard } from './KPICard';
-import { RecentActivities } from './RecentActivities';
 
 const recentActivities: RecentActivity[] = [
   { text: 'Service deployment completed for API Gateway', time: '2 minutes ago' },
@@ -42,7 +41,7 @@ const pageHeader: Header = {
   subtitle: 'Real-time metrics and health status of all services',
 };
 
-export const Dashboard: React.FC = () => {
+export const ObservaDashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<Metric[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

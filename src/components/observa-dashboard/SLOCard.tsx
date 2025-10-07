@@ -66,7 +66,7 @@ const SLOCard: React.FC<{ metric: Metric }> = ({ metric }) => {
           <button
             className="text-xs text-primary hover:text-blue-700 font-medium flex items-center gap-1"
             onClick={() => {
-              navigate('/observability', {
+              navigate('/observa-details', {
                 state: {
                   // Use a key to signal what kind of SLO card was clicked.
                   slo: metric.label === 'SLO Within Target' ? 'withinTarget' : 'overBudget',

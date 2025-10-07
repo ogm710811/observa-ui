@@ -4,9 +4,9 @@ import { useLocation } from 'react-router-dom';
 
 import Breadcrumb from '@/components/common/Breadcrumb';
 import PageHeader from '@/components/common/PageHeader';
-import ServiceCard from '@/components/observability/ServiceCard';
-import ServiceFilters from '@/components/observability/ServiceFilters';
-import ServiceTable from '@/components/observability/ServiceTable';
+import ServiceCard from '@/components/observa-details/ServiceCard';
+import ServiceFilters from '@/components/observa-details/ServiceFilters';
+import ServiceTable from '@/components/observa-details/ServiceTable';
 import { mockServices } from '@/mock/ServicesMockData';
 import { FilterOptions, Service, ServiceCategory, ServiceEnvironment } from '@/types/monitoring';
 import { BreadcrumbItem, Header } from '@/types/pages';
@@ -21,7 +21,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
   { label: 'Observability' }, // current page, not a link
 ];
 
-const Observability: React.FC = () => {
+const ObservaDetails: React.FC = () => {
   const location = useLocation();
 
   // Add this inside your component just before the state hooks:
@@ -196,4 +196,4 @@ const Observability: React.FC = () => {
   );
 };
 
-export default Observability;
+export default ObservaDetails;

@@ -14,7 +14,7 @@ import {
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import SLOCard, { SLO_VARIANTS } from '@/components/dashboard/SLOCard';
+import SLOCard, { SLO_VARIANTS } from '@/components/observa-dashboard/SLOCard';
 import { Metric } from '@/types/dashboard';
 
 type Status =
@@ -100,13 +100,13 @@ export const KPICard = ({ metric }: KPICardProps) => {
               // Optionally, send other filters for classic KPIs if needed.
               // Here is an example: filter by status
               if (metric.label.includes('Healthy')) {
-                navigate('/observability', { state: { status: 'healthy' } });
+                navigate('/observa-details', { state: { status: 'healthy' } });
               } else if (metric.label.includes('Down')) {
-                navigate('/observability', { state: { status: 'down' } });
+                navigate('/observa-details', { state: { status: 'down' } });
               } else if (metric.label.includes('Warning')) {
-                navigate('/observability', { state: { status: 'warning' } });
+                navigate('/observa-details', { state: { status: 'warning' } });
               } else {
-                navigate('/observability'); // fallback: no filter
+                navigate('/observa-details'); // fallback: no filter
               }
             }}
           >

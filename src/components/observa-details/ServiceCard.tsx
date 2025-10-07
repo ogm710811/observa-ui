@@ -1,8 +1,8 @@
 import { Calendar, ExternalLink } from 'lucide-react';
 import React from 'react';
 
-import MiniSparkline from '@/components/observability/MiniSparkline';
-import ServiceStatusBadge from '@/components/observability/ServiceStatusBadge';
+import MiniSparkline from '@/components/observa-details/MiniSparkline';
+import ServiceStatusBadge from '@/components/observa-details/ServiceStatusBadge';
 import { Service } from '@/types/monitoring';
 
 interface ServiceCardProps {

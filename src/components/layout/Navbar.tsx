@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, isCollapsed, onClose, onToggleC
     {
       id: '1',
       name: 'Observability',
-      url: '/observability',
+      url: '/observa-dashboard',
       icon: <ChartNoAxesCombined />,
       category: '',
     },
